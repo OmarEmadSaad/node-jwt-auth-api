@@ -1,0 +1,15 @@
+node_modules/
+.env
+.env.*
+!.env.example
+
+# Files users upload (the default avatar in uploads/defaults is kept)
+uploads/users/**
+!uploads/users/**/
+!uploads/**/.gitkeep
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+*.log

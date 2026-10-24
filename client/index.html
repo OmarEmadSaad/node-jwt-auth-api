@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JWT Auth API</title>
+    <meta
+      name="description"
+      content="A REST API built with Node.js, Express and MongoDB: JWT authentication with refresh tokens, role-based access control, validation and file uploads. Try it live with demo accounts."
+    />
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#demo">Skip to the live demo</a>
+
+    <header class="site-header">
+      <div class="container nav">
+        <a class="brand" href="#top">
+          <img src="assets/logo.svg" alt="" width="28" height="28" />
+          <span>JWT Auth API</span>
+        </a>
+        <nav aria-label="Sections">
+          <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#endpoints">Endpoints</a></li>
+            <li><a href="#demo">Live demo</a></li>
+            <li><a href="#run">Run it</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">Node.js · Express 5 · MongoDB</p>
+            <h1>A secure user API with JWT auth and role-based access</h1>
+            <p class="lead">
+              A REST API for registering, logging in and managing users. Short-lived access
+              tokens, rotating refresh tokens, three permission levels, request validation and
+              avatar/PDF uploads, all with one consistent JSON response format.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#demo">Try the live demo</a>
+              <a class="btn btn-ghost" href="#run">Run it locally</a>
+            </div>
+          </div>
+
+          <figure class="code-card" aria-label="Example login response">
+            <div class="code-card-bar">
+              <span></span><span></span><span></span>
+              <code>POST /api/auth/login</code>
+            </div>
+<pre><code><span class="tok-key">"status"</span>: <span class="tok-str">"success"</span>,
+<span class="tok-key">"data"</span>: {
+  <span class="tok-key">"user"</span>: {
+    <span class="tok-key">"firstName"</span>: <span class="tok-str">"Sarah"</span>,
+    <span class="tok-key">"email"</span>: <span class="tok-str">"sarah.mitchell@example.com"</span>,
+    <span class="tok-key">"role"</span>: <span class="tok-str">"manager"</span>,
+    <span class="tok-key">"avatar"</span>: <span class="tok-str">"uploads/defaults/avatar.svg"</span>
+  },
+  <span class="tok-key">"accessToken"</span>: <span class="tok-str">"eyJhbGciOi…"</span>,
+  <span class="tok-key">"refreshToken"</span>: <span class="tok-str">"eyJhbGciOi…"</span>
+}</code></pre>
+          </figure>
+        </div>
+      </section>
+
+      <!-- Stats -->
+      <section class="stats" aria-label="Project at a glance">
+        <div class="container stats-grid">
+          <div><strong>11</strong><span>REST endpoints</span></div>
+          <div><strong>3</strong><span>user roles</span></div>
+          <div><strong>2</strong><span>token types</span></div>
+          <div><strong>0</strong><span>plain-text passwords</span></div>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section id="features" class="section">
+        <div class="container">
+          <header class="section-head">
+            <p class="eyebrow">Key features</p>
+            <h2>What the API does</h2>
+          </header>
+
+          <div class="feature-grid">
+            <article class="feature">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+              </div>
+              <h3>JWT authentication</h3>
+              <p>
+                Access tokens expire after 10 minutes. Refresh tokens rotate on every use, and
+                only the latest one is accepted, so a stolen old token is useless.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M17 4.5a3.5 3.5 0 0 1 0 7M19 14c1.8.7 3 2.6 3 6"/></svg>
+              </div>
+              <h3>Role-based access</h3>
+              <p>
+                <span class="role role-user">user</span> can read,
+                <span class="role role-admin">admin</span> manages user accounts, and a
+                <span class="role role-manager">manager</span> manages everyone and their roles.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              </div>
+              <h3>Secure passwords</h3>
+              <p>
+                Passwords are hashed with bcrypt, never selected by default and never sent
+                back. Login errors don't reveal which emails exist, and attempts are rate-limited.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M9 11l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg>
+              </div>
+              <h3>Two layers of validation</h3>
+              <p>
+                express-validator checks every request before it reaches a controller, and the
+                Mongoose schema checks the data again before it's saved.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+              </div>
+              <h3>Safe file uploads</h3>
+              <p>
+                Avatars (JPG, PNG, WEBP) and PDFs up to 5 MB, named by their checked type, never
+                by the uploaded name. Replaced, deleted or failed uploads are cleaned up.
+              </p>
+            </article>
+
+            <article class="feature">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>
+              </div>
+              <h3>Consistent errors</h3>
+              <p>
+                One error handler turns validation, duplicate-key, upload and auth errors into
+                the same JSend-style JSON, with correct 400, 401, 403, 404, 405, 409 and 429 codes.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Architecture -->
+      <section id="architecture" class="section section-alt">
+        <div class="container">
+          <header class="section-head">
+            <p class="eyebrow">Architecture</p>
+            <h2>How a request flows</h2>
+            <p class="section-sub">
+              Each request passes through small, single-purpose middleware, then a thin
+              controller hands the work to a service. Any error, at any step, goes to one error
+              handler.
+            </p>
+          </header>
+
+          <ol class="flow" aria-label="Request pipeline">
+            <li><span class="flow-step">1</span><strong>CORS</strong><small>allowed origins only</small></li>
+            <li><span class="flow-step">2</span><strong>verifyToken</strong><small>checks the Bearer JWT</small></li>
+            <li><span class="flow-step">3</span><strong>allowedTo</strong><small>checks the role</small></li>
+            <li><span class="flow-step">4</span><strong>upload</strong><small>multer: avatar / PDF</small></li>
+            <li><span class="flow-step">5</span><strong>validation</strong><small>express-validator</small></li>
+            <li><span class="flow-step">6</span><strong>service</strong><small>rules + Mongoose</small></li>
+          </ol>
+
+          <div class="tree-grid">
+            <pre class="tree" aria-label="Project folders"><code>server.js          loads .env, connects, listens
+src/
+├── app.js         the Express app
+├── config/        db, CORS, uploads, demo mode
+├── controllers/   read the request, send JSON
+├── services/      auth + user logic, permissions
+├── middleware/    token, roles, upload, limits
+├── models/        User (Mongoose)
+├── routes/        /api/auth, /api/users
+├── utils/         AppError, tokens, roles
+└── validators/    request schemas
+scripts/           seed, demo reset, manager
+test/              node:test API tests
+client/            this page
+uploads/users/     avatars/, documents/</code></pre>
+
+            <div class="tech">
+              <h3>Built with</h3>
+              <ul class="tech-list">
+                <li><strong>Node.js 22+</strong><span>ES modules, built-in test runner</span></li>
+                <li><strong>Express 5</strong><span>routing and middleware</span></li>
+                <li><strong>MongoDB Atlas</strong><span>cloud database</span></li>
+                <li><strong>Mongoose</strong><span>schemas, validation, hooks</span></li>
+                <li><strong>jsonwebtoken</strong><span>access and refresh tokens</span></li>
+                <li><strong>bcryptjs</strong><span>password hashing</span></li>
+                <li><strong>express-validator</strong><span>request validation</span></li>
+                <li><strong>Multer</strong><span>multipart file uploads</span></li>
+                <li><strong>HTML, CSS, JavaScript</strong><span>this page, no framework</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Endpoints -->
+      <section id="endpoints" class="section">
+        <div class="container">
+          <header class="section-head">
+            <p class="eyebrow">API reference</p>
+            <h2>Endpoints</h2>
+            <p class="section-sub">All paths start with <code>/api</code>.</p>
+          </header>
+
+          <div class="table-wrap">
+            <table class="endpoints">
+              <thead>
+                <tr><th>Method</th><th>Path</th><th>Access</th><th>Description</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><span class="method get">GET</span></td><td><code>/health</code></td><td>Public</td><td>Is the API up and connected to the database?</td></tr>
+                <tr><td><span class="method post">POST</span></td><td><code>/auth/register</code></td><td>Public</td><td>Create an account (role is always <em>user</em>)</td></tr>
+                <tr><td><span class="method post">POST</span></td><td><code>/auth/login</code></td><td>Public</td><td>Get an access and a refresh token</td></tr>
+                <tr><td><span class="method post">POST</span></td><td><code>/auth/refresh</code></td><td>Refresh token</td><td>Swap the refresh token for a new pair</td></tr>
+                <tr><td><span class="method post">POST</span></td><td><code>/auth/logout</code></td><td>Logged in</td><td>Revoke the refresh token</td></tr>
+                <tr><td><span class="method get">GET</span></td><td><code>/users</code></td><td>Logged in</td><td>List all users</td></tr>
+                <tr><td><span class="method get">GET</span></td><td><code>/users/:id</code></td><td>Logged in</td><td>Get one user</td></tr>
+                <tr><td><span class="method post">POST</span></td><td><code>/users</code></td><td>Admin, manager</td><td>Create a user (only a manager can pick the role)</td></tr>
+                <tr><td><span class="method put">PUT</span></td><td><code>/users/:id</code></td><td>Admin, manager</td><td>Update a user</td></tr>
+                <tr><td><span class="method patch">PATCH</span></td><td><code>/users/:id</code></td><td>Admin, manager</td><td>Update some fields</td></tr>
+                <tr><td><span class="method delete">DELETE</span></td><td><code>/users/:id</code></td><td>Admin, manager</td><td>Delete a user and their files</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">
+            Admins can change or delete accounts with the <em>user</em> role (and their own);
+            only a manager can change or delete admins and managers.
+          </p>
+        </div>
+      </section>
+
+      <!-- Live demo -->
+      <section id="demo" class="section section-alt">
+        <div class="container">
+          <header class="section-head">
+            <p class="eyebrow">Live demo</p>
+            <h2>Log in and try every role</h2>
+            <p class="section-sub">
+              Everything below calls the real API. Pick a demo account to see what a
+              <span class="role role-user">user</span>,
+              <span class="role role-admin">admin</span> and
+              <span class="role role-manager">manager</span> can do.
+            </p>
+          </header>
+
+          <div class="api-status" id="api-status" role="status" aria-live="polite">
+            <span class="dot" aria-hidden="true"></span>
+            <span id="api-status-text">Checking the API…</span>
+          </div>
+
+          <div class="demo-grid">
+            <!-- Auth (logged out) -->
+            <div class="panel" id="auth-panel">
+              <div class="tabs" role="tablist" aria-label="Account">
+                <button type="button" role="tab" id="tab-login" aria-controls="login-form" aria-selected="true">Log in</button>
+                <button type="button" role="tab" id="tab-register" aria-controls="register-form" aria-selected="false" tabindex="-1">Register</button>
+              </div>
+
+              <form id="login-form" role="tabpanel" aria-labelledby="tab-login" novalidate>
+                <label for="demo-account">Demo account</label>
+                <select id="demo-account">
+                  <option value="">Choose a demo account…</option>
+                </select>
+
+                <label for="login-email">Email</label>
+                <input id="login-email" name="email" type="email" autocomplete="username" required />
+
+                <label for="login-password">Password</label>
+                <input id="login-password" name="password" type="password" autocomplete="current-password" required />
+                <p class="hint">Every demo account uses the password <code>DemoPass123!</code></p>
+
+                <p class="form-error" data-error hidden></p>
+                <div class="form-actions">
+                  <button class="btn btn-primary" type="submit">Log in</button>
+                </div>
+              </form>
+
+              <form id="register-form" role="tabpanel" aria-labelledby="tab-register" novalidate hidden>
+                <p class="hint top">New accounts always get the <span class="role role-user">user</span> role.</p>
+                <div class="field-row">
+                  <div>
+                    <label for="reg-first">First name</label>
+                    <input id="reg-first" name="firstName" autocomplete="given-name" required minlength="2" maxlength="50" />
+                  </div>
+                  <div>
+                    <label for="reg-last">Last name</label>
+                    <input id="reg-last" name="lastName" autocomplete="family-name" required minlength="2" maxlength="50" />
+                  </div>
+                </div>
+                <label for="reg-email">Email</label>
+                <input id="reg-email" name="email" type="email" autocomplete="email" required />
+                <label for="reg-phone">Phone number</label>
+                <input id="reg-phone" name="phoneNumber" type="tel" autocomplete="tel" placeholder="+201001234567" required />
+                <label for="reg-password">Password</label>
+                <input id="reg-password" name="password" type="password" autocomplete="new-password" required minlength="8" maxlength="72" />
+                <p class="hint">8-72 characters. Don't use a real password: this is a public demo.</p>
+                <label for="reg-avatar">Avatar <span class="optional">optional · JPG, PNG or WEBP, max 5 MB</span></label>
+                <input id="reg-avatar" name="avatar" type="file" accept="image/jpeg,image/png,image/webp" />
+                <label for="reg-document">Document <span class="optional">optional · PDF, max 5 MB</span></label>
+                <input id="reg-document" name="document" type="file" accept="application/pdf" />
+
+                <p class="form-error" data-error hidden></p>
+                <div class="form-actions">
+                  <button class="btn btn-primary" type="submit">Create account</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Session (logged in) -->
+            <div class="panel" id="session-panel" hidden>
+              <div class="me">
+                <img id="me-avatar" src="assets/avatar.svg" alt="" width="56" height="56" />
+                <div>
+                  <p class="me-name" id="me-name"></p>
+                  <p class="me-email" id="me-email"></p>
+                </div>
+              </div>
+              <h3 class="small-head">What you can do as <span id="me-role"></span></h3>
+              <ul class="can-list" id="can-list"></ul>
+              <p class="hint">
+                Your access token lasts 10 minutes. When it expires, the page gets a new one with
+                your refresh token automatically. Tokens are kept in memory only, so reloading
+                the page logs you out.
+              </p>
+              <div class="form-actions">
+                <button class="btn btn-ghost" type="button" id="logout-btn">Log out</button>
+              </div>
+            </div>
+
+            <!-- Users -->
+            <div class="panel users-panel">
+              <div class="users-head">
+                <h3>Users <span class="count" id="users-count"></span></h3>
+                <button class="btn btn-primary btn-sm" type="button" id="new-user-btn" hidden>New user</button>
+              </div>
+              <p class="hint" id="new-user-note" hidden>Only admins and managers can create users.</p>
+
+              <div class="toolbar" id="toolbar" hidden>
+                <input id="search" type="search" placeholder="Search by name or email" aria-label="Search users" />
+                <select id="role-filter" aria-label="Filter by role">
+                  <option value="">All roles</option>
+                  <option value="manager">Managers</option>
+                  <option value="admin">Admins</option>
+                  <option value="user">Users</option>
+                </select>
+              </div>
+
+              <div id="users" class="users" aria-live="polite">
+                <p class="empty">Log in to load users from <code>GET /api/users</code>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Run it -->
+      <section id="run" class="section">
+        <div class="container">
+          <header class="section-head">
+            <p class="eyebrow">Getting started</p>
+            <h2>Run it locally</h2>
+          </header>
+
+          <ol class="steps">
+            <li>
+              <h3>Install</h3>
+              <pre><code>npm install</code></pre>
+              <p>Needs Node.js 22.9 or newer.</p>
+            </li>
+            <li>
+              <h3>Configure</h3>
+              <pre><code>cp .env.example .env</code></pre>
+              <p>Fill in your MongoDB URI and two JWT secrets.</p>
+            </li>
+            <li>
+              <h3>Seed and test</h3>
+              <pre><code>npm run seed
+npm test</code></pre>
+            </li>
+            <li>
+              <h3>Start</h3>
+              <pre><code>npm run dev</code></pre>
+              <p>Then open <code>client/index.html</code> with VS Code Live Server (port 5500).</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>JWT Auth API, a Node.js back-end project.</p>
+        <p class="muted">Demo data only: every demo account uses an @example.com address.</p>
+      </div>
+    </footer>
+
+    <!-- User details -->
+    <dialog id="details-dialog" class="dialog" aria-labelledby="details-name">
+      <div class="dialog-body">
+        <button type="button" class="dialog-close" data-close aria-label="Close">×</button>
+        <div class="details-head">
+          <img id="details-avatar" src="assets/avatar.svg" alt="" width="80" height="80" />
+          <div>
+            <h3 id="details-name"></h3>
+            <p id="details-badges" class="badges"></p>
+          </div>
+        </div>
+        <dl class="details-list">
+          <dt>Email</dt><dd id="details-email"></dd>
+          <dt>Phone</dt><dd id="details-phone"></dd>
+          <dt>Document</dt><dd id="details-document"></dd>
+          <dt>Joined</dt><dd id="details-created"></dd>
+          <dt>Updated</dt><dd id="details-updated"></dd>
+        </dl>
+        <p class="hint" id="details-note" hidden></p>
+        <div class="form-actions">
+          <button class="btn btn-ghost" type="button" id="edit-btn">Edit</button>
+          <button class="btn btn-danger" type="button" id="delete-btn">Delete</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Create / edit user -->
+    <dialog id="user-dialog" class="dialog" aria-labelledby="user-form-title">
+      <form id="user-form" class="dialog-body" novalidate>
+        <button type="button" class="dialog-close" data-close aria-label="Close">×</button>
+        <h3 id="user-form-title">New user</h3>
+        <p class="hint top" id="user-form-hint"></p>
+        <div class="field-row">
+          <div>
+            <label for="uf-first">First name</label>
+            <input id="uf-first" name="firstName" minlength="2" maxlength="50" />
+          </div>
+          <div>
+            <label for="uf-last">Last name</label>
+            <input id="uf-last" name="lastName" minlength="2" maxlength="50" />
+          </div>
+        </div>
+        <label for="uf-email">Email</label>
+        <input id="uf-email" name="email" type="email" />
+        <label for="uf-phone">Phone number</label>
+        <input id="uf-phone" name="phoneNumber" type="tel" placeholder="+201001234567" />
+        <label for="uf-password">Password <span class="optional" id="uf-password-note"></span></label>
+        <input id="uf-password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="72" />
+        <div id="uf-role-wrap">
+          <label for="uf-role">Role</label>
+          <select id="uf-role" name="role">
+            <option value="user">user</option>
+            <option value="admin">admin</option>
+            <option value="manager">manager</option>
+          </select>
+        </div>
+        <p class="hint" id="uf-role-note" hidden>Only a manager can choose a role. New users get the <em>user</em> role.</p>
+        <label for="uf-avatar">Avatar <span class="optional">JPG, PNG or WEBP, max 5 MB</span></label>
+        <input id="uf-avatar" name="avatar" type="file" accept="image/jpeg,image/png,image/webp" />
+        <label for="uf-document">Document <span class="optional">PDF, max 5 MB</span></label>
+        <input id="uf-document" name="document" type="file" accept="application/pdf" />
+
+        <p class="form-error" data-error hidden></p>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit" id="user-form-submit">Create user</button>
+          <button class="btn btn-ghost" type="button" data-close>Cancel</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Confirm delete -->
+    <dialog id="confirm-dialog" class="dialog dialog-sm" aria-labelledby="confirm-title">
+      <div class="dialog-body">
+        <h3 id="confirm-title">Delete this user?</h3>
+        <p id="confirm-text"></p>
+        <p class="form-error" data-error hidden></p>
+        <div class="form-actions">
+          <button class="btn btn-danger" type="button" id="confirm-delete-btn">Delete</button>
+          <button class="btn btn-ghost" type="button" data-close>Cancel</button>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
