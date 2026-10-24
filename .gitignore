@@ -13,3 +13,6 @@ uploads/users/**
 Thumbs.db
 .vscode/
 *.log
+
+# Compiled frontend (npm run build:client builds it from client/src)
+client/js/

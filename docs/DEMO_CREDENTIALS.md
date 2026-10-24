@@ -5,7 +5,7 @@
 > examples, and the password is used for nothing else. Never reuse it, and never give a
 > demo account access to real data.
 
-The accounts are created by `npm run seed` from [`scripts/data/demoUsers.js`](../scripts/data/demoUsers.js).
+The accounts are created by `npm run seed` from [`scripts/data/demoUsers.ts`](../scripts/data/demoUsers.ts).
 MongoDB stores only bcrypt hashes of the password, never the password itself.
 `npm test` checks that this table matches the seed data.
 

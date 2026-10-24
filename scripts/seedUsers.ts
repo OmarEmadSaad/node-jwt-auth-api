@@ -1,4 +1,4 @@
-// Adds the 10 demo users from scripts/data/demoUsers.js.
+// Adds the 10 demo users from scripts/data/demoUsers.ts.
 // Run with: npm run seed
 //
 // Safe to run again: a user whose email or phone number already exists is

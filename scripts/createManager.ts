@@ -35,7 +35,8 @@ const email = args.email.trim().toLowerCase();
 let user = await User.findOne({ email });
 
 if (!user) {
-  const missing = ["password", "first-name", "last-name", "phone"].filter((key) => !args[key]);
+  const required = ["password", "first-name", "last-name", "phone"] as const;
+  const missing = required.filter((key) => !args[key]);
   if (missing.length) {
     console.error(`No user with email ${email}. To create one, also pass: --${missing.join(", --")}`);
     await mongoose.disconnect();

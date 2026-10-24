@@ -6,7 +6,7 @@
     <title>JWT Auth API</title>
     <meta
       name="description"
-      content="A REST API built with Node.js, Express and MongoDB: JWT authentication with refresh tokens, role-based access control, validation and file uploads. Try it live with demo accounts."
+      content="A REST API built with TypeScript, Node.js, Express and MongoDB: JWT authentication with refresh tokens, role-based access control, validation and file uploads. Try it live with demo accounts."
     />
     <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="css/styles.css" />
@@ -37,7 +37,7 @@
       <section class="hero">
         <div class="container hero-grid">
           <div>
-            <p class="eyebrow">Node.js · Express 5 · MongoDB</p>
+            <p class="eyebrow">TypeScript · Node.js · Express 5 · MongoDB</p>
             <h1>A secure user API with JWT auth and role-based access</h1>
             <p class="lead">
               A REST API for registering, logging in and managing users. Short-lived access
@@ -182,26 +182,28 @@
           </ol>
 
           <div class="tree-grid">
-            <pre class="tree" aria-label="Project folders"><code>server.js          loads .env, connects, listens
+            <pre class="tree" aria-label="Project folders"><code>server.ts          loads .env, connects, listens
 src/
-├── app.js         the Express app
+├── app.ts         the Express app
 ├── config/        db, CORS, uploads, demo mode
 ├── controllers/   read the request, send JSON
 ├── services/      auth + user logic, permissions
 ├── middleware/    token, roles, upload, limits
 ├── models/        User (Mongoose)
 ├── routes/        /api/auth, /api/users
+├── types/         Express request types
 ├── utils/         AppError, tokens, roles
 └── validators/    request schemas
 scripts/           seed, demo reset, manager
 test/              node:test API tests
-client/            this page
+client/src/        this page (TypeScript)
 uploads/users/     avatars/, documents/</code></pre>
 
             <div class="tech">
               <h3>Built with</h3>
               <ul class="tech-list">
-                <li><strong>Node.js 22+</strong><span>ES modules, built-in test runner</span></li>
+                <li><strong>TypeScript</strong><span>strict types, back end and front end</span></li>
+                <li><strong>Node.js 22.18+</strong><span>runs .ts directly, built-in test runner</span></li>
                 <li><strong>Express 5</strong><span>routing and middleware</span></li>
                 <li><strong>MongoDB Atlas</strong><span>cloud database</span></li>
                 <li><strong>Mongoose</strong><span>schemas, validation, hooks</span></li>
@@ -209,7 +211,7 @@ uploads/users/     avatars/, documents/</code></pre>
                 <li><strong>bcryptjs</strong><span>password hashing</span></li>
                 <li><strong>express-validator</strong><span>request validation</span></li>
                 <li><strong>Multer</strong><span>multipart file uploads</span></li>
-                <li><strong>HTML, CSS, JavaScript</strong><span>this page, no framework</span></li>
+                <li><strong>HTML, CSS, TypeScript</strong><span>this page, no framework</span></li>
               </ul>
             </div>
           </div>
@@ -388,7 +390,7 @@ uploads/users/     avatars/, documents/</code></pre>
             <li>
               <h3>Install</h3>
               <pre><code>npm install</code></pre>
-              <p>Needs Node.js 22.9 or newer.</p>
+              <p>Needs Node.js 22.18 or newer.</p>
             </li>
             <li>
               <h3>Configure</h3>
@@ -402,7 +404,8 @@ npm test</code></pre>
             </li>
             <li>
               <h3>Start</h3>
-              <pre><code>npm run dev</code></pre>
+              <pre><code>npm run dev
+npm run build:client</code></pre>
               <p>Then open <code>client/index.html</code> with VS Code Live Server (port 5500).</p>
             </li>
           </ol>
@@ -412,7 +415,7 @@ npm test</code></pre>
 
     <footer class="site-footer">
       <div class="container">
-        <p>JWT Auth API, a Node.js back-end project.</p>
+        <p>JWT Auth API, a TypeScript and Node.js back-end project.</p>
         <p class="muted">Demo data only: every demo account uses an @example.com address.</p>
       </div>
     </footer>

@@ -10,7 +10,7 @@ import { notFound, errorHandler } from "./middleware/errorHandler.ts";
 import * as httpStatusText from "./utils/httpStatusText.ts";
 
 // The Express app without app.listen(), so tests can start it on any port.
-// server.js loads .env, connects to MongoDB and starts it.
+// server.ts loads .env, connects to MongoDB and starts it.
 export const app = express();
 
 app.disable("x-powered-by");
@@ -37,7 +37,7 @@ app.use(
 );
 
 // For uptime checks and for the frontend to see whether the API is awake
-app.get("/api/health", (req, res) => {
+app.get("/api/health", (_req, res) => {
   res.json({
     status: httpStatusText.SUCCESS,
     data: {

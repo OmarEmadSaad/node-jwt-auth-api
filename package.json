@@ -2,19 +2,22 @@
   "name": "jwt-auth-api",
   "version": "1.0.0",
   "description": "REST API with JWT auth, refresh tokens, role-based access and file uploads (Node.js, Express 5, MongoDB)",
-  "main": "server.js",
+  "main": "server.ts",
   "type": "module",
   "engines": {
-    "node": ">=22.9"
+    "node": ">=22.18"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch --env-file-if-exists=.env server.js",
-    "test": "node --env-file-if-exists=.env --test --test-concurrency=1 \"test/**/*.test.js\"",
-    "seed": "node --env-file-if-exists=.env scripts/seedUsers.js",
-    "seed:reset": "node --env-file-if-exists=.env scripts/seedUsers.js --reset",
-    "demo:reset": "node --env-file-if-exists=.env scripts/resetDemo.js",
-    "create-manager": "node --env-file-if-exists=.env scripts/createManager.js"
+    "start": "node server.ts",
+    "dev": "node --watch --env-file-if-exists=.env server.ts",
+    "test": "node --env-file-if-exists=.env --test --test-concurrency=1 \"test/**/*.test.ts\"",
+    "typecheck": "tsc -p . && tsc -p client --noEmit",
+    "build:client": "tsc -p client",
+    "watch:client": "tsc -p client --watch",
+    "seed": "node --env-file-if-exists=.env scripts/seedUsers.ts",
+    "seed:reset": "node --env-file-if-exists=.env scripts/seedUsers.ts --reset",
+    "demo:reset": "node --env-file-if-exists=.env scripts/resetDemo.ts",
+    "create-manager": "node --env-file-if-exists=.env scripts/createManager.ts"
   },
   "keywords": [
     "express",

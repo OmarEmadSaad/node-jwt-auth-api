@@ -1,6 +1,6 @@
 # JWT Auth API
 
-A REST API for user accounts, built with **Node.js, Express 5 and MongoDB**: JWT access
+A REST API for user accounts, built with **TypeScript, Node.js, Express 5 and MongoDB**: JWT access
 tokens, rotating refresh tokens, three roles, request validation, avatar/PDF uploads and
 one consistent JSON response format. It comes with a portfolio page (`client/`) that calls the real
 API, so visitors can log in with demo accounts and try every role.
@@ -21,28 +21,45 @@ API, so visitors can log in with demo accounts and try every role.
 - **Public demo mode:** demo accounts can't be changed by visitors; users created during
   the demo are sandbox users that can be edited, deleted and reset.
 
+## TypeScript
+
+Everything is TypeScript with `strict` checks:
+
+- **Back end, scripts and tests** run directly with Node.js 22.18+, which strips the types
+  at load time, so there is no build step and no `dist/` folder. That's why imports end in
+  `.ts` and the code uses only erasable syntax (no enums, namespaces or constructor
+  parameter properties). `npm run typecheck` runs the compiler to check the types.
+- **Front end** (`client/src/*.ts`) is compiled to plain browser scripts in `client/js/`
+  by `npm run build:client` (`npm run watch:client` rebuilds on save). `client/js/` is
+  build output and isn't committed.
+
 ## Project structure
 
 ```
-server.js                 entry point: loads .env, checks settings, connects, listens
+server.ts                 entry point: loads .env, checks settings, connects, listens
 src/
-  app.js                  the Express app (middleware, static uploads, routes, health)
-  config/                 db.js (Mongoose), cors.js, uploads.js (paths, file rules), demo.js
-  routes/                 auth.routes.js, user.routes.js: URL -> middleware -> controller
+  app.ts                  the Express app (middleware, static uploads, routes, health)
+  config/                 db.ts (Mongoose), cors.ts, uploads.ts (paths, file rules), demo.ts
+  routes/                 auth.routes.ts, user.routes.ts: URL -> middleware -> controller
   controllers/            read the request, call a service, send the JSON response
-  services/               auth.service.js (tokens, login), user.service.js (CRUD, permissions)
-  models/                 user.model.js: schema, password hashing hooks
+  services/               auth.service.ts (tokens, login), user.service.ts (CRUD, permissions)
+  models/                 user.model.ts: schema and types, password hashing hooks
   middleware/             verifyToken, allowedTo (roles), upload (multer), rateLimit,
                           validationSchema, asyncWrapper, errorHandler
   validators/             request schemas for express-validator
+  types/                  adds req.user to Express's Request type
   utils/                  AppError, JWT helpers, role names, response status names
 scripts/
-  seedUsers.js            adds the 10 demo users (npm run seed)
-  resetDemo.js            deletes sandbox users and their files (npm run demo:reset)
-  createManager.js        makes your own account a manager (npm run create-manager)
-  data/demoUsers.js       the demo accounts
+  seedUsers.ts            adds the 10 demo users (npm run seed)
+  resetDemo.ts            deletes sandbox users and their files (npm run demo:reset)
+  createManager.ts        makes your own account a manager (npm run create-manager)
+  data/demoUsers.ts       the demo accounts
 test/                     API tests (node:test), run against a separate _test database
-client/                   portfolio page: index.html, css/, js/app.js, js/config.js
+client/                   portfolio page: index.html, css/, assets/
+  src/                    app.ts (the live demo), config.ts (API address), globals.d.ts
+  js/                     compiled from src/ by npm run build:client (not in git)
+tsconfig.json             type checking for the back end, scripts and tests
+client/tsconfig.json      compiles client/src to client/js
 docs/DEMO_CREDENTIALS.md  demo accounts, password and what each role can do
 postman/                  Postman collection for every endpoint
 uploads/
@@ -75,13 +92,14 @@ from `/uploads/...` (outside `/api`).
 
 ## Run locally
 
-Requires **Node.js 22.9+** and a MongoDB database (a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster works).
+Requires **Node.js 22.18+** and a MongoDB database (a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster works).
 
 ```bash
 npm install
 cp .env.example .env      # then fill in MONGODB_URI and two JWT secrets
 npm run seed              # adds the 10 demo users (safe to run again)
 npm run dev               # http://localhost:3000, restarts on changes
+npm run build:client      # compiles the page's TypeScript (in another terminal)
 ```
 
 In Atlas, allow your IP under **Network Access**, or connections fail with an SSL "alert
@@ -99,6 +117,8 @@ account a manager: `npm run create-manager -- --email you@example.com`.
 | Command | What it does |
 |---------|--------------|
 | `npm run dev` | start with auto-restart |
+| `npm run typecheck` | check the types of the back end and the page |
+| `npm run build:client` | compile `client/src` to `client/js` (`watch:client` to rebuild on save) |
 | `npm start` | start (production) |
 | `npm test` | run the API tests against `MONGODB_TEST_DB_NAME` (default `jwt_auth_api_test`) |
 | `npm run seed` | add missing demo users; never changes existing ones |
@@ -137,7 +157,8 @@ Node.js host, the data in MongoDB Atlas. Nothing here is deployed automatically.
 
 ### 2. Backend (e.g. Render, Railway, Fly.io)
 
-- Build command `npm install`, start command `npm start`, Node 22.9+.
+- Build command `npm install`, start command `npm start`, Node 22.18+ (set the host's
+  Node version, e.g. `NODE_VERSION=22` on Render).
 - Set the environment variables above on the host (never commit them). For the public
   demo: `DEMO_MODE=true`, `TRUST_PROXY=1`, and
   `CORS_ORIGINS=https://<your-user>.github.io` (the page's origin, no path).
@@ -154,14 +175,15 @@ Node.js host, the data in MongoDB Atlas. Nothing here is deployed automatically.
 
 ### 3. Frontend (GitHub Pages)
 
-1. In `client/js/config.js`, set `API_BASE_URL` to the backend URL, e.g.
+1. In `client/src/config.ts`, set `API_BASE_URL` to the backend URL, e.g.
    `"https://jwt-auth-api.onrender.com"` (no trailing slash, no `/api`).
 2. Repo **Settings → Pages → Source: GitHub Actions**.
-3. **Actions → Deploy client to GitHub Pages → Run workflow.** It publishes `client/`.
+3. **Actions → Deploy client to GitHub Pages → Run workflow.** It compiles the TypeScript
+   and publishes `client/`.
 4. Make sure the backend's `CORS_ORIGINS` contains `https://<your-user>.github.io`.
 
-Any static host works the same way (Netlify, Vercel, Cloudflare Pages): publish the
-`client/` folder.
+Any static host works the same way (Netlify, Vercel, Cloudflare Pages): build command
+`npm run build:client`, publish directory `client/`.
 
 ## Security notes
 

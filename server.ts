@@ -1,7 +1,7 @@
 import { fileURLToPath } from "node:url";
 
 // Load .env before importing the app, so settings read at startup
-// (e.g. TRUST_PROXY in src/app.js) can come from it
+// (e.g. TRUST_PROXY in src/app.ts) can come from it
 try {
   process.loadEnvFile(fileURLToPath(new URL(".env", import.meta.url)));
 } catch {
@@ -21,7 +21,7 @@ const { connectDB } = await import("./src/config/db.ts");
 try {
   await connectDB();
 } catch (err) {
-  console.error("Failed to connect to MongoDB:", err.message);
+  console.error("Failed to connect to MongoDB:", (err as Error).message);
   process.exit(1);
 }
 

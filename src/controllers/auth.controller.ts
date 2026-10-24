@@ -2,9 +2,11 @@ import * as authService from "../services/auth.service.ts";
 import * as httpStatusText from "../utils/httpStatusText.ts";
 import { asyncWrapper } from "../middleware/asyncWrapper.ts";
 import { getUploadedPaths } from "../middleware/upload.ts";
+import { currentUser } from "../middleware/verifyToken.ts";
 
-// The routes validate req.body before these run; the database work is in
-// services/auth.service.js, and any thrown error goes to errorHandler.
+// The routes validate req.body before these run, so the fields are strings;
+// the database work is in services/auth.service.ts, and any thrown error
+// goes to errorHandler.
 
 export const register = asyncWrapper(async (req, res) => {
   const { firstName, lastName, email, phoneNumber, password } = req.body;
@@ -34,6 +36,6 @@ export const refresh = asyncWrapper(async (req, res) => {
 });
 
 export const logout = asyncWrapper(async (req, res) => {
-  await authService.logoutUser(req.user.id);
+  await authService.logoutUser(currentUser(req).id);
   res.json({ status: httpStatusText.SUCCESS, data: null });
 });

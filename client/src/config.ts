@@ -1,4 +1,5 @@
-// Where this page finds the backend API.
+// Where this page finds the backend API. Compiled to js/config.js by
+// npm run build:client: run it again after changing this file.
 //
 // API_BASE_URL: the deployed backend's address, with no trailing slash and no /api,
 // e.g. "https://jwt-auth-api.onrender.com". The backend must also list this page's

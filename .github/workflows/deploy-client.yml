@@ -1,6 +1,7 @@
 # Publishes client/ to GitHub Pages.
 # Manual only: run it from the repo's Actions tab ("Deploy client to GitHub Pages" > Run workflow).
-# First set API_BASE_URL in client/js/config.js to the deployed backend, and in the repo
+# It compiles client/src/*.ts into client/js/ first. Before running it, set API_BASE_URL
+# in client/src/config.ts to the deployed backend, and in the repo
 # settings choose Pages > Source: GitHub Actions.
 name: Deploy client to GitHub Pages
 
@@ -24,6 +25,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build:client
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

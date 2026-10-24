@@ -1,13 +1,21 @@
-import { USER, ADMIN, MANAGER } from "../../src/utils/userRoles.ts";
+import { USER, ADMIN, MANAGER, type Role } from "../../src/utils/userRoles.ts";
 
 // Demo accounts for local testing and the public portfolio demo.
-// Created by scripts/seedUsers.js and listed in docs/DEMO_CREDENTIALS.md
-// (test/demoCredentials.test.js checks that the two match).
+// Created by scripts/seedUsers.ts and listed in docs/DEMO_CREDENTIALS.md
+// (test/demoCredentials.test.ts checks that the two match).
 // They all use @example.com, a domain reserved for examples, so no real person
 // gets these emails. Never reuse this password for a real account.
 export const DEMO_PASSWORD = "DemoPass123!";
 
-export const demoUsers = [
+export interface DemoUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  role: Role;
+}
+
+export const demoUsers: DemoUser[] = [
   { firstName: "Sarah", lastName: "Mitchell", email: "sarah.mitchell@example.com", phoneNumber: "+201001234561", role: MANAGER },
   { firstName: "Karim", lastName: "Hassan", email: "karim.hassan@example.com", phoneNumber: "+201112345672", role: ADMIN },
   { firstName: "Emily", lastName: "Chen", email: "emily.chen@example.com", phoneNumber: "+201223456783", role: ADMIN },

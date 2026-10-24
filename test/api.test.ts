@@ -14,12 +14,13 @@ import {
   User,
   baseUrl,
 } from "./helpers.ts";
+import type { Role } from "../src/utils/userRoles.ts";
 import { fromRoot } from "../src/config/uploads.ts";
 
 before(start);
 after(stop);
 
-const fileExists = (relativePath) => fs.existsSync(fromRoot(relativePath));
+const fileExists = (relativePath: string) => fs.existsSync(fromRoot(relativePath));
 // removeFile deletes in the background, so give it a moment
 const waitForFs = () => new Promise((resolve) => setTimeout(resolve, 200));
 
@@ -102,7 +103,7 @@ describe("register", () => {
     assert.ok(res.body.data.accessToken);
 
     const stored = await User.findById(res.body.data.user._id).select("+password");
-    assert.match(stored.password, /^\$2[aby]\$/, "password is stored as a bcrypt hash");
+    assert.match(stored!.password, /^\$2[aby]\$/, "password is stored as a bcrypt hash");
   });
 
   it("rejects a duplicate email with 409", async () => {
@@ -154,7 +155,7 @@ describe("tokens", () => {
 });
 
 describe("roles", () => {
-  let tokens;
+  let tokens: Record<Role, string>;
   before(async () => {
     tokens = {
       user: (await login(demoEmail("user"))).accessToken,
@@ -163,7 +164,7 @@ describe("roles", () => {
     };
   });
 
-  const idOf = async (email) => String((await User.findOne({ email }))._id);
+  const idOf = async (email: string) => String((await User.findOne({ email }))!._id);
 
   it("any logged-in user can list and read users", async () => {
     const list = await api("/api/users", { token: tokens.user });
@@ -184,7 +185,7 @@ describe("roles", () => {
   });
 
   it("a regular user can't create, update or delete", async () => {
-    const target = await idOf(demoUsers.at(-1).email);
+    const target = await idOf(demoUsers.at(-1)!.email);
     const create = await api("/api/users", { method: "POST", token: tokens.user, json: newUserFields() });
     const update = await api(`/api/users/${target}`, { method: "PATCH", token: tokens.user, json: { firstName: "Hacked" } });
     const remove = await api(`/api/users/${target}`, { method: "DELETE", token: tokens.user });
@@ -252,19 +253,19 @@ describe("roles", () => {
     await api(`/api/users/${id}`, { method: "PATCH", token: tokens.admin, json: { password: "NewPass456!" } });
 
     const stored = await User.findById(id).select("+password");
-    assert.match(stored.password, /^\$2[aby]\$/);
+    assert.match(stored!.password, /^\$2[aby]\$/);
     await login(fields.email, "NewPass456!");
     await api(`/api/users/${id}`, { method: "DELETE", token: tokens.admin });
   });
 });
 
 describe("file uploads", () => {
-  let admin;
+  let admin: string;
   before(async () => {
     admin = (await login(demoEmail("admin"))).accessToken;
   });
 
-  const userForm = (files) => {
+  const userForm = (files: [field: string, blob: Blob, name: string][]) => {
     const form = new FormData();
     for (const [key, value] of Object.entries(newUserFields())) form.append(key, value);
     for (const [field, blob, name] of files) form.append(field, blob, name);
@@ -332,7 +333,7 @@ describe("file uploads", () => {
 });
 
 describe("demo mode", () => {
-  let admin, manager;
+  let admin: string, manager: string;
   before(async () => {
     process.env.DEMO_MODE = "true";
     admin = (await login(demoEmail("admin"))).accessToken;
@@ -347,7 +348,7 @@ describe("demo mode", () => {
   });
 
   it("the demo accounts can't be changed or deleted, even by the manager", async () => {
-    const target = String((await User.findOne({ email: demoEmail("user") }))._id);
+    const target = String((await User.findOne({ email: demoEmail("user") }))!._id);
     const update = await api(`/api/users/${target}`, { method: "PATCH", token: manager, json: { password: "Changed123!" } });
     const remove = await api(`/api/users/${target}`, { method: "DELETE", token: manager });
     assert.deepEqual([update.status, remove.status], [403, 403]);

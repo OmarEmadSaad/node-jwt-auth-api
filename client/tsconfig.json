@@ -1,0 +1,20 @@
+{
+  // Compiles client/src/*.ts to client/js/*.js (npm run build:client).
+  // The files are plain browser scripts (no import/export), loaded in order by
+  // index.html: config.js first, then app.js.
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "esnext",
+    "moduleDetection": "auto",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "types": [],
+    "rootDir": "src",
+    "outDir": "js",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"]
+}
