@@ -630,11 +630,15 @@ for (const role of ["manager", "admin", "user"] as const) {
   }
   demoSelect.append(group);
 }
-demoSelect.addEventListener("change", () => {
+const fillDemoAccount = () => {
   if (!demoSelect.value) return;
   $<HTMLInputElement>("#login-email").value = demoSelect.value;
   $<HTMLInputElement>("#login-password").value = DEMO_PASSWORD;
-});
+};
+demoSelect.addEventListener("change", fillDemoAccount);
+// Visitors can log in straight away: the first demo account is pre-filled
+demoSelect.value = DEMO_ACCOUNTS[0][1];
+fillDemoAccount();
 
 const loginForm = $<HTMLFormElement>("#login-form");
 loginForm.addEventListener("submit", async (event) => {
