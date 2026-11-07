@@ -8,7 +8,6 @@
     "node": ">=22.18"
   },
   "scripts": {
-    "prestart": "tsc -p client",
     "start": "node server.ts",
     "dev": "node --watch --env-file-if-exists=.env server.ts",
     "test": "node --env-file-if-exists=.env --test --test-concurrency=1 \"test/**/*.test.ts\"",
