@@ -8,6 +8,7 @@
     "node": ">=22.18"
   },
   "scripts": {
+    "prestart": "tsc -p client",
     "start": "node server.ts",
     "dev": "node --watch --env-file-if-exists=.env server.ts",
     "test": "node --env-file-if-exists=.env --test --test-concurrency=1 \"test/**/*.test.ts\"",
@@ -37,6 +38,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.2",
     "multer": "^2.4.0",
+    "typescript": "^7.0.2",
     "validator": "^13.15.35"
   },
   "devDependencies": {
@@ -45,7 +47,6 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.3.0",
     "@types/node": "^22.20.5",
-    "@types/validator": "^13.15.10",
-    "typescript": "^7.0.2"
+    "@types/validator": "^13.15.10"
   }
 }

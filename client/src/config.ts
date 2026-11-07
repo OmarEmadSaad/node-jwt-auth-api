@@ -5,9 +5,11 @@
 // e.g. "https://jwt-auth-api.onrender.com". The backend must also list this page's
 // origin (e.g. https://<user>.github.io) in its CORS_ORIGINS setting.
 //
-// Leave it empty while developing: when the page is opened from localhost or
-// 127.0.0.1 (e.g. VS Code Live Server), it uses http://localhost:3000.
-// On any other host, an empty value shows "demo backend not configured".
+// Leave it empty when the API serves this page (http://localhost:3000/ or the
+// deployed backend's own URL): it then uses the address it was loaded from.
+// Opened from VS Code Live Server (port 5500/5501), it uses
+// http://localhost:3000. Only set it when the page is hosted elsewhere
+// (e.g. GitHub Pages).
 //
 // Only put a public URL here. This file is sent to every visitor, so it must
 // never contain secrets, passwords or database connection strings.

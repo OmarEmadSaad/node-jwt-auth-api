@@ -59,14 +59,18 @@ const input = (form: HTMLFormElement, name: string) =>
 
 // ---------- API address (see config.ts) ----------
 const LOCAL_HOSTS = ["localhost", "127.0.0.1", "[::1]"];
+const LIVE_SERVER_PORTS = ["5500", "5501"];
 
 const resolveApiBase = () => {
   const configured = (window.APP_CONFIG?.API_BASE_URL || "").trim().replace(/\/+$/, "");
   if (configured) return configured;
-  if (LOCAL_HOSTS.includes(location.hostname) || location.protocol === "file:") {
+  // Opened as a file, or from VS Code Live Server (ports 5500/5501)
+  if (location.protocol === "file:") return "http://localhost:3000";
+  if (LOCAL_HOSTS.includes(location.hostname) && LIVE_SERVER_PORTS.includes(location.port)) {
     return "http://localhost:3000";
   }
-  return "";
+  // Served by the API itself (http://localhost:3000/ or the deployed URL)
+  return location.origin;
 };
 
 const API_BASE = resolveApiBase();

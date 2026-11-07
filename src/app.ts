@@ -50,6 +50,11 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
+// The demo page (client/), on the same address as the API: open
+// http://localhost:3000/ or the deployed URL. client/js is compiled from
+// client/src by npm run build:client (npm start runs it first).
+app.use(express.static(fromRoot("client")));
+
 app.use(notFound);
 
 app.use(errorHandler);
