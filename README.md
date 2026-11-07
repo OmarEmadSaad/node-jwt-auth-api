@@ -1,5 +1,7 @@
 # JWT Auth API
 
+**Live demo:** https://jwt-auth-api.bonto.run (the login form comes pre-filled with a demo account; free hosting, so the first visit can take a few seconds to wake up)
+
 A REST API for user accounts, built with **TypeScript, Node.js, Express 5 and MongoDB**: JWT access
 tokens, rotating refresh tokens, three roles, request validation, avatar/PDF uploads and
 one consistent JSON response format. It comes with a portfolio page (`client/`) that calls the real
